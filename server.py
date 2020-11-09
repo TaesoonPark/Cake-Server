@@ -1,0 +1,60 @@
+import threading, socket, json
+
+from custom_message import *
+from session_manager import *
+from message_handlers import handleMessage, pushMessage, initWorkers
+
+
+def socketHandler(client_socket, addr):
+  port_no = addr[1];
+
+  result = addSession(port_no, client_socket);
+  if not result:
+    return;
+
+  res = makeMessage(MSG_CONNECTED);
+  res["session_id"] = port_no;
+  sendMessage(port_no, res);
+
+  try:
+    while True:
+      data = client_socket.recv(4);
+      
+      if len(data) == 0:
+        print("socket will close");
+        break;
+
+      length = int.from_bytes(data, byteorder='little');
+      data = client_socket.recv(length);
+      msg = data.decode();
+
+      print ("recv message", msg);
+
+      pushMessage(msg);
+
+  except Exception as e:
+    print("socket except", e);
+
+  finally:
+    removeSession(addr[1]);
+
+if __name__ == '__main__':
+  initWorkers();
+
+  server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
+  server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
+  server_socket.bind(("", 9999));
+  server_socket.listen();
+  print("socket listen");
+
+  try:
+    while True:
+      client_socket, addr = server_socket.accept();
+      th = threading.Thread(target=socketHandler, args = (client_socket, addr));
+      th.start();
+
+  except:
+    print("error");
+
+  finally:
+    server_socket.close();
