@@ -2,7 +2,8 @@ import threading, socket, json
 
 from custom_message import *
 from session_manager import *
-from message_handlers import handleMessage, pushMessage, initWorkers
+from worker_thread import pushMessage, initWorkers
+from message_handlers import initHandlers
 
 
 def socketHandler(client_socket, addr):
@@ -39,6 +40,7 @@ def socketHandler(client_socket, addr):
     removeSession(addr[1]);
 
 if __name__ == '__main__':
+  initHandlers();
   initWorkers();
 
   server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
