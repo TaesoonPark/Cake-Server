@@ -51,7 +51,7 @@ def sendMessage(session_id, message):
   global client_sockets;
 
   msg = json.dumps(message);
-  print("send message= ", msg);
+  print("send message=", msg);
   bytes = msg.encode();
   msg_len = len(bytes);
 

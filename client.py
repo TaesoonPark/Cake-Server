@@ -24,9 +24,9 @@ while True:
   data = json.loads(msg);
   print ("recv=", msg);
 
-  if data["message_id"] == 1:
+  if data["message_id"] == 0:
     req = dict();
-    req["message_id"] = 2;
+    req["message_id"] = 1;
     req["session_id"] = data["session_id"];
 
     req_msg = json.dumps(req);

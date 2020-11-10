@@ -29,7 +29,7 @@ def socketHandler(client_socket, addr):
       data = client_socket.recv(length);
       msg = data.decode();
 
-      print ("recv message", msg);
+      print ("recv message= ", msg);
 
       pushMessage(msg);
 
@@ -40,6 +40,7 @@ def socketHandler(client_socket, addr):
     removeSession(addr[1]);
 
 if __name__ == '__main__':
+  initCustomMessage();
   initHandlers();
   initWorkers();
 
