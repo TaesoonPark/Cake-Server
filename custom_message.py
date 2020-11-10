@@ -5,12 +5,19 @@ MSG_LOGIN = 1;
 MSG_LOGIN_RES = 2;
 MSG_SEND_CHAT = 3;
 MSG_RECV_CHAT = 4;
+MSG_MAKE_ROOM = 5;
+MSG_MAKE_ROOM_ACK = 6;
+MSG_ROOM_LIST = 7;
+MSG_ROOM_LIST_ACK = 8;
+MSG_JOIN_ROOM = 9;
+MSG_JOIN_ROOM_ACK = 10;
 
 message_template = [];
 
 def makeMessage(message_id):
   #print("make message", message_id);
   return json.loads(message_template[message_id]);
+
 
 def initCustomMessage():
   with open('messages.json') as text:

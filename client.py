@@ -54,6 +54,41 @@ while True:
     client_socket.sendall(req_len.to_bytes(4, byteorder="little"));
     client_socket.sendall(req_bytes);
 
+    req = dict();
+    req["message_id"] = 7
+    req["session_id"] = session_id;
+
+    req_msg = json.dumps(req);
+    req_bytes = req_msg.encode();
+    req_len = len(req_bytes);
+    client_socket.sendall(req_len.to_bytes(4, byteorder="little"));
+    client_socket.sendall(req_bytes);
+
+  if data["message_id"] == 8:
+    if len(data["room_list"]) == 0:
+      req = dict();
+      req["message_id"] = 5
+      req["session_id"] = session_id;
+      req["title"] = "title";
+
+      req_msg = json.dumps(req);
+      req_bytes = req_msg.encode();
+      req_len = len(req_bytes);
+      client_socket.sendall(req_len.to_bytes(4, byteorder="little"));
+      client_socket.sendall(req_bytes);
+    else:
+      req = dict();
+      req["message_id"] = 9
+      req["session_id"] = session_id;
+      req["title"] = data["room_list"][0]["title"];
+
+      req_msg = json.dumps(req);
+      req_bytes = req_msg.encode();
+      req_len = len(req_bytes);
+      client_socket.sendall(req_len.to_bytes(4, byteorder="little"));
+      client_socket.sendall(req_bytes);
+
+
   #client_socket.close();
   #break;
 

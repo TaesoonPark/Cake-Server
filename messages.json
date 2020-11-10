@@ -1,27 +1,54 @@
 [
   {
-      "message_id":0,
-      "session_id":0
+      "message_id": 0,
+      "session_id": 0
   },
   {
-      "message_id":1,
-      "session_id":0,
+      "message_id": 1,
+      "session_id": 0,
       "nickname": "nickname"
   },
   {
-      "message_id":2,
+      "message_id": 2,
       "result": "true",
       "channel_id": -1,
       "nickname": "nickname"
   },
   {
-      "message_id":3,
-      "session_id":0,
+      "message_id": 3,
+      "session_id": 0,
       "text": "hi"
   },
   {
-      "message_id":4,
+      "message_id": 4,
       "nickname": "nickname",
       "text": "message"
+  },
+  {
+      "meesage_id": 5,
+      "session_id": 0,
+      "title": "title"
+  },
+  {
+      "message_id": 6,
+      "result": "true"
+  },
+  {
+      "message_id": 7,
+      "session_id": 0
+  },
+  {
+      "message_id": 8,
+      "room_list": [{"title": "title", "owner": "owner", "session_count": 0}]
+  },
+  {
+      "message_id": 9,
+      "session_id": 0,
+      "room_title": "title"
+  },
+  {
+      "message_id": 10,
+      "result": "true",
+      "session_list": [{"nickname": "nickname"}]
   }
 ]
