@@ -2,8 +2,9 @@ import threading, socket, json
 
 from custom_message import *
 from session_manager import *
-from worker_thread import pushMessage, initWorkers
+from worker_thread import initWorkers, pushMessage
 from message_handlers import initHandlers
+from channel_handlers import initChannels, removeUserFromChannel
 
 
 def socketHandler(client_socket, addr):
@@ -22,7 +23,6 @@ def socketHandler(client_socket, addr):
       data = client_socket.recv(4);
       
       if len(data) == 0:
-        print("socket will close");
         break;
 
       length = int.from_bytes(data, byteorder='little');
@@ -38,11 +38,13 @@ def socketHandler(client_socket, addr):
 
   finally:
     removeSession(addr[1]);
+    removeUserFromChannel(addr[1]);
 
 if __name__ == '__main__':
   initCustomMessage();
   initHandlers();
   initWorkers();
+  initChannels();
 
   server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
   server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);

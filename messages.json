@@ -5,10 +5,23 @@
   },
   {
       "message_id":1,
-      "session_id":0
+      "session_id":0,
+      "nickname": "nickname"
   },
   {
       "message_id":2,
-      "result": "true"
+      "result": "true",
+      "channel_id": -1,
+      "nickname": "nickname"
+  },
+  {
+      "message_id":3,
+      "session_id":0,
+      "text": "hi"
+  },
+  {
+      "message_id":4,
+      "nickname": "nickname",
+      "text": "message"
   }
 ]

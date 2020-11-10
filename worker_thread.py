@@ -6,11 +6,10 @@ from custom_message import *
 
 q = Queue();
 worker_threads = [];
-
 message_handlers = dict();
 
 def doWork(index, q):
-  print("doWork", index);
+  print("Worker start", index);
   while True:
     if q.empty():
       time.sleep(0.1);
@@ -38,17 +37,19 @@ def initWorkers(count=2):
 
 
 def handleMessage(message):
-  print("handleMessage");
   req = json.loads(message);
   if "message_id" not in req:
     print("wrong message", req);
+    return;
+  
+  if req["message_id"] not in message_handlers:
+    print("cannot find handler", req["message_id"]);
     return;
 
   message_handlers[req["message_id"]](req);
 
 
 def pushMessage(message):
-  print("pushMessage");
   q.put(message);
 
 def addMessageHandler(message_id, handler):

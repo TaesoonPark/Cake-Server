@@ -3,11 +3,13 @@ import json
 MSG_CONNECTED = 0;
 MSG_LOGIN = 1;
 MSG_LOGIN_RES = 2;
+MSG_SEND_CHAT = 3;
+MSG_RECV_CHAT = 4;
 
 message_template = [];
 
 def makeMessage(message_id):
-  print("make message", message_id);
+  #print("make message", message_id);
   return json.loads(message_template[message_id]);
 
 def initCustomMessage():
