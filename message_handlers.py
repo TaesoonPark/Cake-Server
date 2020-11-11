@@ -94,9 +94,22 @@ def handleJoinRoom(message):
   sendMessage(session_id, res);
 
 
+def handleLeaveRoom(message):
+  print("handleLeaveRoom");
+
+  session_id = message["session_id"];
+
+  result = leaveRoom(session_id);
+  res = makeMessage(MSG_LEAVE_ROOM_ACK);
+  res["result"] = result;
+
+  sendMessage(session_id, res);
+
+
 def initHandlers():
   addMessageHandler(MSG_LOGIN, handleLogin);
   addMessageHandler(MSG_SEND_CHAT, handleChat);
   addMessageHandler(MSG_MAKE_ROOM, handleMakeRoom);
   addMessageHandler(MSG_ROOM_LIST, handleRoomList);
   addMessageHandler(MSG_JOIN_ROOM, handleJoinRoom);
+  addMessageHandler(MSG_LEAVE_ROOM, handleLeaveRoom);

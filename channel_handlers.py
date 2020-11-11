@@ -101,6 +101,7 @@ class Channel:
 
 
   def removeUserFromRoom(self, session_id):
+    result = False;
     self.session_to_room_lock.acquire();
     if session_id in self.session_to_room:
       room_title = self.session_to_room[session_id];
@@ -112,7 +113,9 @@ class Channel:
       self.rooms_lock.release();
 
       del self.session_to_room[session_id];
+      result = True;
     self.session_to_room_lock.release();
+    return result;
 
 
 active_channels = [];
@@ -199,3 +202,14 @@ def joinRoom(session_id, title):
       continue;
 
     return active_channel.joinRoom(session_id, info[1], title);
+
+
+def leaveRoom(session_id):
+  global active_channels;
+
+  for active_channel in active_channels:
+    info = active_channel.findUser(session_id);
+    if info[0] == None:
+      continue;
+
+    return active_channel.removeUserFromRoom(session_id);
