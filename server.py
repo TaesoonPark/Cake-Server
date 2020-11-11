@@ -1,4 +1,6 @@
-import threading, socket, json
+import threading
+import socket
+import json
 
 from custom_message import *
 from session_manager import *
@@ -7,6 +9,7 @@ from message_handlers import initHandlers
 from channel_handlers import initChannels, removeUserFromChannel
 
 
+# 소켓이 연결되면 호출하는 콜백.
 def socketHandler(client_socket, addr):
   port_no = addr[1];
 
@@ -40,6 +43,8 @@ def socketHandler(client_socket, addr):
     removeSession(addr[1]);
     removeUserFromChannel(addr[1]);
 
+
+# 메인 함수
 if __name__ == '__main__':
   initCustomMessage();
   initHandlers();

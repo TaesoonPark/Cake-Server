@@ -1,5 +1,6 @@
 import json
 
+# 메시지 아이디 선언. 상세 스펙은 messages.json 참조
 MSG_CONNECTED = 0;
 MSG_LOGIN = 1;
 MSG_LOGIN_RES = 2;
@@ -16,11 +17,13 @@ MSG_LEAVE_ROOM_ACK = 12;
 
 message_template = [];
 
+# 메시지 기본형 생성
 def makeMessage(message_id):
   #print("make message", message_id);
   return json.loads(message_template[message_id]);
 
 
+# messages.json 파일 로드. 기본형 적재
 def initCustomMessage():
   with open('messages.json') as text:
     json_object = json.load(text);

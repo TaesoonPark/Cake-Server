@@ -14,7 +14,7 @@ class Channel:
     self.session_to_room_lock = threading.Lock();
     self.session_to_room = dict();
 
-
+  # 채널에 유저 세션을 추가
   def addUser(self, session_id, nickname):
     self.sessions_lock.acquire();
     if session_id in self.sessions:
@@ -31,13 +31,13 @@ class Channel:
     self.sessions_lock.release();
     return True;
 
-
+  # 채널에서 유저 세션을 제거
   def removeUser(self, session_id):
     self.sessions_lock.acquire();
     del self.sessions[session_id];
     self.sessions_lock.release();
 
-
+  # 현재 채널에 유저가 있는지 검사.
   def findUser(self, session_id):
     self.sessions_lock.acquire();
     result = (None, "");
@@ -46,14 +46,14 @@ class Channel:
     self.sessions_lock.release();
     return result;
 
-
+  # 현재 채널에 있는 모든 세션에 메시지 전송
   def sendToAll(self, msg):
     self.sessions_lock.acquire();
     for session_id in self.sessions:
       sendMessage(session_id, msg);
     self.sessions_lock.release();
 
-
+  # 게임룸을 생성. title을 key로 사용하여 중복생성 불가
   def createRoom(self, title, nickname):
     self.rooms_lock.acquire();
     result = (False, None);
@@ -65,7 +65,7 @@ class Channel:
     self.rooms_lock.release()
     return result;
 
-
+  # 게임룸 제거. 남은 유저가 없을때만 호출된다.
   def deleteRoom(self, title):
     self.rooms_lock.acquire();
     if title in self.rooms:
@@ -73,7 +73,7 @@ class Channel:
     self.rooms_lock.release();
     return;
 
-
+  # 현재 채널의 전체 게임룸 정보 획득
   def getRoomList(self):
     room_list = [];
     self.rooms_lock.acquire();
@@ -83,7 +83,7 @@ class Channel:
     self.rooms_lock.release();
     return room_list;
 
-
+  # 게임룸에 유저 진입
   def joinRoom(self, session_id, nickname, title):
     self.rooms_lock.acquire();
     join_result = (False, []);
@@ -99,7 +99,7 @@ class Channel:
     self.rooms_lock.release();
     return join_result;
 
-
+  # 게임룸에서 유저 제거
   def removeUserFromRoom(self, session_id):
     result = False;
     self.session_to_room_lock.acquire();
@@ -121,6 +121,7 @@ class Channel:
 active_channels = [];
 
 
+# 채널 리스트 초기화
 def initChannels(channel_count=1):
   print("initChannels", channel_count);
 
@@ -129,6 +130,7 @@ def initChannels(channel_count=1):
     active_channels.append(Channel(channel_id));
 
 
+# 이하 message_handlers에서 호출하기 위한 함수들
 def addUserToChannel(session_id, nickname, channel_id=0):
   global active_channels;
 

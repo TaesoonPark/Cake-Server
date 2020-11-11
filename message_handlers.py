@@ -106,6 +106,7 @@ def handleLeaveRoom(message):
   sendMessage(session_id, res);
 
 
+# 메시지 핸들러 등록
 def initHandlers():
   addMessageHandler(MSG_LOGIN, handleLogin);
   addMessageHandler(MSG_SEND_CHAT, handleChat);

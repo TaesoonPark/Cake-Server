@@ -4,6 +4,7 @@ import json
 client_sockets = dict();
 client_sockets_lock = threading.Lock();
 
+# 연결이 확인된 세션 추가
 def addSession(session_id, client_socket):
   global client_sockets;
 
@@ -20,6 +21,7 @@ def addSession(session_id, client_socket):
   return True;
 
 
+# 세션 아이디로 세션 획득
 def getSession(session_id):
   global client_sockets;
 
@@ -34,6 +36,7 @@ def getSession(session_id):
   return client_sockets[session_id];
 
 
+# 연결 끊긴 세션 제거
 def removeSession(session_id):
   global client_sockets;
 
@@ -47,6 +50,7 @@ def removeSession(session_id):
   client_sockets_lock.release();
 
 
+# 세션에 메시지 전송. 처음 4바이트는 메시지 길이.
 def sendMessage(session_id, message):
   global client_sockets;
 
