@@ -58,5 +58,21 @@
   {
       "message_id": 12,
       "result": "true"
+  },
+  {
+      "message_id": 13,
+      "session_id": 0
+  },
+  {
+      "message_id": 14,
+      "result": "true"
+  },
+  {
+      "message_id": 15,
+      "session_list": [{"nickname": "nickname"}]
+  },
+  {
+      "message_id": 16,
+      "game_status": "start"
   }
 ]

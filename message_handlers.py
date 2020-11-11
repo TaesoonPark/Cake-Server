@@ -1,7 +1,7 @@
 from worker_thread import addMessageHandler
 from custom_message import *
 from session_manager import *
-from channel_handlers import addUserToChannel, sendChannelChat, createRoom, getRoomList, joinRoom
+from channel_handlers import addUserToChannel, sendChannelChat, createRoom, getRoomList, joinRoom, startGame
 
 def handleLogin(message):
   print("handleLogin", message);
@@ -106,6 +106,18 @@ def handleLeaveRoom(message):
   sendMessage(session_id, res);
 
 
+def handleStartGame(message):
+  print("handleStartGame");
+
+  session_id = message["session_id"];
+
+  result = startGame(session_id);
+  res = makeMessage(MSG_START_GAME_ACK);
+  res["result"] = result;
+
+  sendMessage(session_id, res);
+
+
 # 메시지 핸들러 등록
 def initHandlers():
   addMessageHandler(MSG_LOGIN, handleLogin);
@@ -114,3 +126,4 @@ def initHandlers():
   addMessageHandler(MSG_ROOM_LIST, handleRoomList);
   addMessageHandler(MSG_JOIN_ROOM, handleJoinRoom);
   addMessageHandler(MSG_LEAVE_ROOM, handleLeaveRoom);
+  addMessageHandler(MSG_START_GAME, handleStartGame);

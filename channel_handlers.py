@@ -1,7 +1,7 @@
 import threading
 
 from session_manager import *
-from room_handlers import *
+from game_room import *
 
 #TODO 채널 유저 수 조절
 class Channel:
@@ -58,7 +58,7 @@ class Channel:
     self.rooms_lock.acquire();
     result = (False, None);
     if title not in self.rooms:
-      new_room = Room(title, nickname);
+      new_room = GameRoom(title, nickname);
       self.rooms[title] = new_room;
       result = (True, new_room);
 
@@ -79,14 +79,13 @@ class Channel:
     self.rooms_lock.acquire();
     for title, room in self.rooms.items():
       room_list.append(room.getRoomSummary());
-
     self.rooms_lock.release();
     return room_list;
 
   # 게임룸에 유저 진입
   def joinRoom(self, session_id, nickname, title):
     self.rooms_lock.acquire();
-    join_result = (False, []);
+    join_result = (False, dict());
     if title in self.rooms:
       result = self.rooms[title].addUser(session_id, nickname);
       if result == True:
@@ -95,7 +94,6 @@ class Channel:
         self.session_to_room_lock.acquire();
         self.session_to_room[session_id] = title;
         self.session_to_room_lock.release();
-
     self.rooms_lock.release();
     return join_result;
 
@@ -108,12 +106,24 @@ class Channel:
 
       self.rooms_lock.acquire();
       self.rooms[room_title].removeUser(session_id);
-      if self.rooms[room_title].session_count == 0:
+      if self.rooms[room_title].getSessionCount() == 0:
         del self.rooms[room_title];
       self.rooms_lock.release();
 
       del self.session_to_room[session_id];
       result = True;
+    self.session_to_room_lock.release();
+    return result;
+
+  # 게임 시작
+  def startGame(self, session_id):
+    result = False;
+    self.session_to_room_lock.acquire();
+    if session_id in self.session_to_room:
+      room_title = self.session_to_room[session_id];
+      self.rooms_lock.acquire();
+      result = self.rooms[room_title].startGame(session_id);
+      self.rooms_lock.release();
     self.session_to_room_lock.release();
     return result;
 
@@ -215,3 +225,14 @@ def leaveRoom(session_id):
       continue;
 
     return active_channel.removeUserFromRoom(session_id);
+
+
+def startGame(session_id):
+  global active_channels;
+
+  for active_channel in active_channels:
+    info = active_channel.findUser(session_id);
+    if info[0] == None:
+      continue;
+
+    return active_channel.startGame(session_id);
