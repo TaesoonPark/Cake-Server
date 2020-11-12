@@ -6,7 +6,6 @@ class SessionManager():
   # 싱글톤 구현을 위한 오버라이딩
   def __new__(cls):
     if not hasattr(cls, 'instance'):
-      print("object create");
       cls.instance = super(SessionManager, cls).__new__(cls);
       cls.client_sockets = dict();
       cls.client_sockets_lock = threading.Lock();

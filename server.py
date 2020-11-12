@@ -3,7 +3,7 @@ import socket
 import json
 
 from custom_message import *
-from worker_thread import initWorkers, pushMessage, pushIOMessage
+from worker_thread import WorkerManager, IOWorkerManager
 from message_handlers import initHandlers
 from channel_handlers import initChannels, removeUserFromChannel
 from session_manager import SessionManager
@@ -19,7 +19,7 @@ def socketHandler(client_socket, addr):
 
   res = makeMessage(MSG_CONNECTED);
   res["session_id"] = port_no;
-  pushIOMessage(port_no, res);
+  IOWorkerManager().push_io_message(port_no, res);
 
   try:
     while True:
@@ -34,7 +34,7 @@ def socketHandler(client_socket, addr):
 
       print ("recv message= ", msg);
 
-      pushMessage(msg);
+      WorkerManager().push_message(msg);
 
   except Exception as e:
     print("socket except", e);
@@ -48,7 +48,6 @@ def socketHandler(client_socket, addr):
 if __name__ == '__main__':
   initCustomMessage();
   initHandlers();
-  initWorkers();
   initChannels();
 
   server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);

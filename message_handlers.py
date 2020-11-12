@@ -1,4 +1,4 @@
-from worker_thread import addMessageHandler, pushIOMessage
+from worker_thread import IOWorkerManager, WorkerManager
 from custom_message import *
 from channel_handlers import addUserToChannel, sendChannelChat, createRoom, getRoomList, joinRoom, startGame
 
@@ -21,7 +21,7 @@ def handleLogin(message):
     res["channel_id"] = -1;
     res["nickname"] = "";
 
-  pushIOMessage(session_id, res);
+  IOWorkerManager().push_io_message(session_id, res);
 
 
 def handleChat(message):
@@ -49,7 +49,7 @@ def handleMakeRoom(message):
   res = makeMessage(MSG_MAKE_ROOM_ACK);
   res["result"] = result;
 
-  pushIOMessage(session_id, res);
+  IOWorkerManager().push_io_message(session_id, res);
 
 
 def handleRoomList(message):
@@ -70,7 +70,7 @@ def handleRoomList(message):
       entry["session_count"] = room_info[2];
       res["room_list"].append(entry);
 
-  pushIOMessage(session_id, res);
+  IOWorkerManager().push_io_message(session_id, res);
 
 
 def handleJoinRoom(message):
@@ -90,7 +90,7 @@ def handleJoinRoom(message):
       entry["nickname"] = nickname;
       res["session_list"].append(entry);
 
-  pushIOMessage(session_id, res);
+  IOWorkerManager().push_io_message(session_id, res);
 
 
 def handleLeaveRoom(message):
@@ -102,7 +102,7 @@ def handleLeaveRoom(message):
   res = makeMessage(MSG_LEAVE_ROOM_ACK);
   res["result"] = result;
 
-  pushIOMessage(session_id, res);
+  IOWorkerManager().push_io_message(session_id, res);
 
 
 def handleStartGame(message):
@@ -114,15 +114,15 @@ def handleStartGame(message):
   res = makeMessage(MSG_START_GAME_ACK);
   res["result"] = result;
 
-  pushIOMessage(session_id, res);
+  IOWorkerManager().push_io_message(session_id, res);
 
 
 # 메시지 핸들러 등록
 def initHandlers():
-  addMessageHandler(MSG_LOGIN, handleLogin);
-  addMessageHandler(MSG_SEND_CHAT, handleChat);
-  addMessageHandler(MSG_MAKE_ROOM, handleMakeRoom);
-  addMessageHandler(MSG_ROOM_LIST, handleRoomList);
-  addMessageHandler(MSG_JOIN_ROOM, handleJoinRoom);
-  addMessageHandler(MSG_LEAVE_ROOM, handleLeaveRoom);
-  addMessageHandler(MSG_START_GAME, handleStartGame);
+  WorkerManager().add_message_handler(MSG_LOGIN, handleLogin);
+  WorkerManager().add_message_handler(MSG_SEND_CHAT, handleChat);
+  WorkerManager().add_message_handler(MSG_MAKE_ROOM, handleMakeRoom);
+  WorkerManager().add_message_handler(MSG_ROOM_LIST, handleRoomList);
+  WorkerManager().add_message_handler(MSG_JOIN_ROOM, handleJoinRoom);
+  WorkerManager().add_message_handler(MSG_LEAVE_ROOM, handleLeaveRoom);
+  WorkerManager().add_message_handler(MSG_START_GAME, handleStartGame);
