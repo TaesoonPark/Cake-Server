@@ -11,7 +11,7 @@ from worker_thread import WorkerManager, IOWorkerManager
 
 
 # 소켓이 연결되면 호출하는 콜백.
-def socketHandler(client_socket, addr):
+def socket_handler(client_socket, addr):
   port_no = addr[1];
 
   result = SessionManager().add_session(port_no, client_socket);
@@ -60,7 +60,7 @@ if __name__ == '__main__':
   try:
     while True:
       client_socket, addr = server_socket.accept();
-      th = threading.Thread(target=socketHandler, args=(client_socket, addr));
+      th = threading.Thread(target=socket_handler, args=(client_socket, addr));
       th.start();
 
   except:
