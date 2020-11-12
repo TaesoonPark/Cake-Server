@@ -10,23 +10,23 @@ class Game:
     self.sessions = sessions;
     self.finish_callback = finish_callback;
 
-  def sendToAll(self, message):
+  def send_to_all(self, message):
     for session_id in self.sessions:
       IOWorkerManager().push_io_message(session_id, message);
 
-  def startGame(self):
+  def start_game(self):
     self.result_data = dict();
 
     # 테스트용 5초 후 게임이 종료된다고 가정
-    self.finish_timer = Timer(5, self.finishGame);
+    self.finish_timer = Timer(5, self.finish_game);
     self.finish_timer.start();
 
-    msg = makeMessage(MSG_GAME_STATUS);
+    msg = make_message(MSG_GAME_STATUS);
     msg["game_status"] = "start";
-    self.sendToAll(msg);
+    self.send_to_all(msg);
 
-  def finishGame(self):
-    msg = makeMessage(MSG_GAME_STATUS);
+  def finish_game(self):
+    msg = make_message(MSG_GAME_STATUS);
     msg["game_status"] = "end";
-    self.sendToAll(msg);
+    self.send_to_all(msg);
     return self.finish_callback(self.result_data);

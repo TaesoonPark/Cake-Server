@@ -3,10 +3,11 @@ import socket
 import json
 
 from custom_message import *
-from worker_thread import WorkerManager, IOWorkerManager
-from message_handlers import initHandlers
-from channel_handlers import initChannels, removeUserFromChannel
+from message_handlers import init_handlers
+from channel_handlers import init_channels, remove_user_from_channel
+
 from session_manager import SessionManager
+from worker_thread import WorkerManager, IOWorkerManager
 
 
 # 소켓이 연결되면 호출하는 콜백.
@@ -17,7 +18,7 @@ def socketHandler(client_socket, addr):
   if not result:
     return;
 
-  res = makeMessage(MSG_CONNECTED);
+  res = make_message(MSG_CONNECTED);
   res["session_id"] = port_no;
   IOWorkerManager().push_io_message(port_no, res);
 
@@ -41,14 +42,14 @@ def socketHandler(client_socket, addr):
 
   finally:
     SessionManager().remove_session(addr[1]);
-    removeUserFromChannel(addr[1]);
+    remove_user_from_channel(addr[1]);
 
 
 # 메인 함수
 if __name__ == '__main__':
-  initCustomMessage();
-  initHandlers();
-  initChannels();
+  init_custom_message();
+  init_handlers();
+  init_channels();
 
   server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
   server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);

@@ -22,13 +22,13 @@ MSG_GAME_STATUS = 16;
 message_template = [];
 
 # 메시지 기본형 생성
-def makeMessage(message_id):
+def make_message(message_id):
   #print("make message", message_id);
   return json.loads(message_template[message_id]);
 
 
 # messages.json 파일 로드. 기본형 적재
-def initCustomMessage():
+def init_custom_message():
   with open('messages.json') as text:
     json_object = json.load(text);
 
