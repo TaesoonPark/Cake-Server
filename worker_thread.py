@@ -5,10 +5,14 @@ import time
 from queue import Queue
 
 from custom_message import *
+from session_manager import sendMessage
 
 q = Queue();
 worker_threads = [];
 message_handlers = dict();
+
+io_q = Queue();
+io_threads = [];
 
 # 워커쓰레드의 루프. 대기하다가 처리가 필요한 메시지가 생기면 진행
 def doWork(index, q):
@@ -57,13 +61,42 @@ def addMessageHandler(message_id, handler):
   message_handlers[message_id] = handler;
 
 
+# 워커쓰레드의 루프. 대기하다가 처리가 필요한 메시지가 생기면 진행
+def doIO(index, q):
+  print("IO Worker start", index);
+  while True:
+    if q.empty():
+      time.sleep(0.1);
+      continue;
+
+    job = q.get();
+    if job is None:
+      time.sleep(0.1);
+      print("wrong process", index);
+      continue;
+
+    sendMessage(job[0], job[1]);
+
+
+# io큐에 할일 저장
+def pushIOMessage(session_id, message):
+  io_q.put((session_id, message));
+
+
 # 워커 쓰레드 초기화
-def initWorkers(count=2):
-  global q;
+def initWorkers(worker_count=2, io_count=2):
   global worker_threads;
-  print("init workers", count);
-  for i in range(count):
+  print("init workers", worker_count);
+  for i in range(worker_count):
     t = threading.Thread(target=doWork, args=(i, q));
     t.setDaemon(True);
     worker_threads.append(t);
+    t.start();
+
+  global io_threads;
+  print("init IO workers", io_count);
+  for i in range(io_count):
+    t = threading.Thread(target=doIO, args=(i, io_q));
+    t.setDaemon(True);
+    io_threads.append(t);
     t.start();

@@ -1,6 +1,5 @@
-from worker_thread import addMessageHandler
+from worker_thread import addMessageHandler, pushIOMessage
 from custom_message import *
-from session_manager import *
 from channel_handlers import addUserToChannel, sendChannelChat, createRoom, getRoomList, joinRoom, startGame
 
 def handleLogin(message):
@@ -22,7 +21,7 @@ def handleLogin(message):
     res["channel_id"] = -1;
     res["nickname"] = "";
 
-  sendMessage(session_id, res);
+  pushIOMessage(session_id, res);
 
 
 def handleChat(message):
@@ -50,7 +49,7 @@ def handleMakeRoom(message):
   res = makeMessage(MSG_MAKE_ROOM_ACK);
   res["result"] = result;
 
-  sendMessage(session_id, res);
+  pushIOMessage(session_id, res);
 
 
 def handleRoomList(message):
@@ -71,7 +70,7 @@ def handleRoomList(message):
       entry["session_count"] = room_info[2];
       res["room_list"].append(entry);
 
-  sendMessage(session_id, res);
+  pushIOMessage(session_id, res);
 
 
 def handleJoinRoom(message):
@@ -91,7 +90,7 @@ def handleJoinRoom(message):
       entry["nickname"] = nickname;
       res["session_list"].append(entry);
 
-  sendMessage(session_id, res);
+  pushIOMessage(session_id, res);
 
 
 def handleLeaveRoom(message):
@@ -103,7 +102,7 @@ def handleLeaveRoom(message):
   res = makeMessage(MSG_LEAVE_ROOM_ACK);
   res["result"] = result;
 
-  sendMessage(session_id, res);
+  pushIOMessage(session_id, res);
 
 
 def handleStartGame(message):
@@ -115,7 +114,7 @@ def handleStartGame(message):
   res = makeMessage(MSG_START_GAME_ACK);
   res["result"] = result;
 
-  sendMessage(session_id, res);
+  pushIOMessage(session_id, res);
 
 
 # 메시지 핸들러 등록

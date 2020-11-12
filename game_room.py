@@ -1,7 +1,7 @@
 import threading
 
 from custom_message import *
-from session_manager import sendMessage
+from worker_thread import pushIOMessage
 from game import *
 
 # 게임룸 클래스
@@ -71,14 +71,14 @@ class GameRoom:
       msg["session_list"].append(entry);
 
     for session_id in self.sessions:
-      sendMessage(session_id, msg);
+      pushIOMessage(session_id, msg);
     self.sessions_lock.release();
 
   # 메시지를 방 인원 전체에게 전송
   def sendToAll(self, msg):
     self.sessions_lock.acquire();
     for session_id in self.sessions:
-      sendMessage(session_id, msg);
+      pushIOMessage(session_id, msg);
     self.sessions_lock.release();
 
   # gameRoomList에서 쓰기위한 요약 정보

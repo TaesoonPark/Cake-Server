@@ -4,7 +4,7 @@ import json
 
 from custom_message import *
 from session_manager import *
-from worker_thread import initWorkers, pushMessage
+from worker_thread import initWorkers, pushMessage, pushIOMessage
 from message_handlers import initHandlers
 from channel_handlers import initChannels, removeUserFromChannel
 
@@ -19,7 +19,7 @@ def socketHandler(client_socket, addr):
 
   res = makeMessage(MSG_CONNECTED);
   res["session_id"] = port_no;
-  sendMessage(port_no, res);
+  pushIOMessage(port_no, res);
 
   try:
     while True:

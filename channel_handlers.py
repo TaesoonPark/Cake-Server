@@ -1,7 +1,8 @@
 import threading
 
-from session_manager import *
+from session_manager import getSession
 from game_room import *
+from worker_thread import pushIOMessage
 
 #TODO 채널 유저 수 조절
 class Channel:
@@ -50,7 +51,7 @@ class Channel:
   def sendToAll(self, msg):
     self.sessions_lock.acquire();
     for session_id in self.sessions:
-      sendMessage(session_id, msg);
+      pushIOMessage(session_id, msg);
     self.sessions_lock.release();
 
   # 게임룸을 생성. title을 key로 사용하여 중복생성 불가

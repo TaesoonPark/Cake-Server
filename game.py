@@ -1,7 +1,7 @@
 from threading import Timer
 import time
 
-from session_manager import sendMessage
+from worker_thread import pushIOMessage
 from custom_message import *
 
 # 인게임 슈퍼 클래스
@@ -12,7 +12,7 @@ class Game:
 
   def sendToAll(self, message):
     for session_id in self.sessions:
-      sendMessage(session_id, message);
+      pushIOMessage(session_id, message);
 
   def startGame(self):
     self.result_data = dict();
