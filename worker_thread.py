@@ -67,5 +67,3 @@ def initWorkers(count=2):
     t.setDaemon(True);
     worker_threads.append(t);
     t.start();
-
-

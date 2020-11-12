@@ -1,3 +1,4 @@
+import socket
 import threading
 import json
 
@@ -59,14 +60,17 @@ def sendMessage(session_id, message):
   bytes = msg.encode();
   msg_len = len(bytes);
 
-  client_sockets_lock.acquire();
+  try:
+    client_sockets_lock.acquire();
 
-  if session_id not in client_sockets:
-    print("cannot find session", session_id);
-    return;
+    if session_id not in client_sockets:
+      print("cannot find session", session_id);
+      return;
 
-  client_socket = client_sockets[session_id];
-  client_socket.sendall(msg_len.to_bytes(4, byteorder="little"));
-  client_socket.sendall(bytes);
-
-  client_sockets_lock.release();
+    client_socket = client_sockets[session_id];
+    client_socket.sendall(msg_len.to_bytes(4, byteorder="little"));
+    client_socket.sendall(bytes);
+  except socket.error as e:
+    print("exception :", e);
+  finally:
+    client_sockets_lock.release();

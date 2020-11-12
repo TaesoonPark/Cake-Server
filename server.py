@@ -60,7 +60,7 @@ if __name__ == '__main__':
   try:
     while True:
       client_socket, addr = server_socket.accept();
-      th = threading.Thread(target=socketHandler, args = (client_socket, addr));
+      th = threading.Thread(target=socketHandler, args=(client_socket, addr));
       th.start();
 
   except:
