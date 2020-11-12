@@ -5,7 +5,7 @@ import time
 from queue import Queue
 
 from custom_message import *
-from session_manager import sendMessage
+from session_manager import SessionManager
 
 q = Queue();
 worker_threads = [];
@@ -75,7 +75,7 @@ def doIO(index, q):
       print("wrong process", index);
       continue;
 
-    sendMessage(job[0], job[1]);
+    SessionManager().send_message(job[0], job[1]);
 
 
 # io큐에 할일 저장

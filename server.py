@@ -3,17 +3,17 @@ import socket
 import json
 
 from custom_message import *
-from session_manager import *
 from worker_thread import initWorkers, pushMessage, pushIOMessage
 from message_handlers import initHandlers
 from channel_handlers import initChannels, removeUserFromChannel
+from session_manager import SessionManager
 
 
 # 소켓이 연결되면 호출하는 콜백.
 def socketHandler(client_socket, addr):
   port_no = addr[1];
 
-  result = addSession(port_no, client_socket);
+  result = SessionManager().add_session(port_no, client_socket);
   if not result:
     return;
 
@@ -40,7 +40,7 @@ def socketHandler(client_socket, addr):
     print("socket except", e);
 
   finally:
-    removeSession(addr[1]);
+    SessionManager().remove_session(addr[1]);
     removeUserFromChannel(addr[1]);
 
 

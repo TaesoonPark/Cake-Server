@@ -1,6 +1,6 @@
 import threading
 
-from session_manager import getSession
+from session_manager import SessionManager
 from game_room import *
 from worker_thread import pushIOMessage
 
@@ -22,7 +22,7 @@ class Channel:
       print("duplicate session in channel", self.channel_id);
       return False;
 
-    client_socket = getSession(session_id);
+    client_socket = SessionManager().get_session(session_id);
     if client_socket == None:
       self.sessions_lock.release();
       print("cannot find session", session_id);
