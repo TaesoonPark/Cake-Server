@@ -2,6 +2,7 @@ import socket
 import threading
 import json
 
+
 class SessionManager():
   # 싱글톤 구현을 위한 오버라이딩
   def __new__(cls):
@@ -15,28 +16,27 @@ class SessionManager():
   def add_session(cls, session_id, client_socket):
     cls.client_sockets_lock.acquire();
 
-    if session_id in cls.client_sockets:
-      print("duplicate session", session_id);
-      return False;
-
-    cls.client_sockets[session_id] = client_socket;
+    result = False;
+    if session_id not in cls.client_sockets:
+      cls.client_sockets[session_id] = client_socket;
+      result = True;
 
     cls.client_sockets_lock.release();
 
-    return True;
+    return result;
 
   # 세션 아이디로 세션 획득(별 쓸모 없고 좋은 구현이 아님)
   def get_session(cls, session_id):
     cls.client_sockets_lock.acquire();
 
     if session_id not in cls.client_sockets:
+      cls.client_sockets_lock.release();
       print("not exist session", session_id);
       return None;
 
     cls.client_sockets_lock.release();
 
     return cls.client_sockets[session_id];
-
 
   # 연결 끊긴 세션 제거
   def remove_session(cls, session_id):
@@ -48,7 +48,6 @@ class SessionManager():
       del cls.client_sockets[session_id];
 
     cls.client_sockets_lock.release();
-
 
   # 세션에 메시지 전송. 처음 4바이트는 메시지 길이.
   def send_message(cls, session_id, message):

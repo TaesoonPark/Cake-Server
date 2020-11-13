@@ -103,7 +103,7 @@ class GameRoom:
   # 인게임 종료시 갈무리
   def game_finished(self, result_data):
     self.game_lock.acquire();
-    del self.game;
+    self.game = None;
     self.game_lock.release();
 
   # 게임 시작

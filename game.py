@@ -6,27 +6,27 @@ from custom_message import *
 
 # 인게임 슈퍼 클래스
 class Game:
-  def __init__(self, sessions, finish_callback):
-    self.sessions = sessions;
-    self.finish_callback = finish_callback;
+  def __init__(cls, sessions, finish_callback):
+    cls.sessions = sessions;
+    cls.finish_callback = finish_callback;
 
-  def send_to_all(self, message):
-    for session_id in self.sessions:
+  def send_to_all(cls, message):
+    for session_id in cls.sessions:
       IOWorkerManager().push_io_message(session_id, message);
 
-  def start_game(self):
-    self.result_data = dict();
+  def start_game(cls):
+    cls.result_data = dict();
 
     # 테스트용 5초 후 게임이 종료된다고 가정
-    self.finish_timer = Timer(5, self.finish_game);
-    self.finish_timer.start();
+    cls.finish_timer = Timer(5, cls.finish_game);
+    cls.finish_timer.start();
 
     msg = make_message(MSG_GAME_STATUS);
     msg["game_status"] = "start";
-    self.send_to_all(msg);
+    cls.send_to_all(msg);
 
-  def finish_game(self):
+  def finish_game(cls):
     msg = make_message(MSG_GAME_STATUS);
     msg["game_status"] = "end";
-    self.send_to_all(msg);
-    return self.finish_callback(self.result_data);
+    cls.send_to_all(msg);
+    return cls.finish_callback(cls.result_data);
