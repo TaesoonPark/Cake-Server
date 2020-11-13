@@ -63,3 +63,28 @@ class SessionManager():
       print("exception :", e);
     finally:
       cls.sessions_lock.release();
+
+  # 세션 컨텍스트에 데이터 저장
+  def add_session_context(cls, session_id, key, value):
+    cls.sessions_lock.acquire();
+
+    if session_id in cls.sessions:
+      cls.sessions[session_id].add_context(key, value);
+    else:
+      print("cannot find session", session_id);
+
+    cls.sessions_lock.release();
+
+  # 세션 컨텍스트에서 데이터 불러오기
+  def get_session_context(cls, session_id, key):
+    cls.sessions_lock.acquire();
+
+    if session_id in cls.sessions:
+      result = cls.sessions[session_id].get_context(key);
+    else:
+      print("cannot find session", session_id);
+      result = (False, None);
+
+    cls.sessions_lock.release();
+
+    return result;

@@ -1,6 +1,7 @@
 from worker_thread import IOWorkerManager, WorkerManager
 from custom_message import *
 from channel_handlers import add_user_to_channel, send_channel_chat, create_room, get_room_list, join_room, start_game
+from session_manager import SessionManager
 
 def handle_login(message):
   print("handle_login", message);
@@ -21,6 +22,7 @@ def handle_login(message):
     res["channel_id"] = -1;
     res["nickname"] = "";
 
+  SessionManager().add_session_context(session_id, "nickname", nickname);
   IOWorkerManager().push_io_message(session_id, res);
 
 
