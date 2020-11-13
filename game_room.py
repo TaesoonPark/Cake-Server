@@ -119,8 +119,10 @@ class GameRoom:
       result = False;
 
     if result:
+      self.game_lock.acquire();
       self.game = Game(self.sessions, self.game_finished);
       self.game.start_game();
+      self.game_lock.release();
     self.sessions_lock.release();
 
     return result;
