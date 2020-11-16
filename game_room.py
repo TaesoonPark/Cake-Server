@@ -1,16 +1,17 @@
 import threading
 
 from custom_message import *
-from worker_thread import IOWorkerManager
+from worker_thread import WorkerManager, IOWorkerManager
 from game import Game
 
 # 게임룸 클래스
 class GameRoom:
-  def __init__(cls, title, nickname):
+  def __init__(cls, title, nickname, channel_id):
     cls.title = title;
     cls.owner_nickname = nickname;
     cls.sessions_lock = threading.Lock();
     cls.sessions = dict();
+    cls.timer = None;
 
     cls.game_lock = threading.Lock();
     cls.game = None;
@@ -20,6 +21,15 @@ class GameRoom:
     cls.game_config["game_type"] = 0;
     # 2인 게임이라 가정
     cls.game_config["max_user"] = 2;
+    cls.game_config["frame_rate"] = 4;
+    cls.game_config["frame_interval"] = 1 / cls.game_config["frame_rate"];
+
+    message = make_message(INTERNAL_PROCESS_GAME_UPDATE);
+    message["channel_id"] = channel_id;
+    message["game_title"] = title;
+    cls.game_config["update_message"] = json.dumps(message).encode();
+
+
 
   # 게임룸에 유저 추가
   def add_user(cls, session_id, nickname):
@@ -131,15 +141,17 @@ class GameRoom:
       cls.make_game();
       if cls.game is not None:
         cls.game.start_game();
+        cls.timer.start();
       else:
         print("start_game() cannot find game object");
         result = False;
       cls.game_lock.release();
+
     cls.sessions_lock.release();
 
     return result;
 
-  #게임 클래스 팩토리
+  # 게임 클래스 팩토리
   def make_game(cls):
     cls.game_config_lock.acquire();
     game_type = cls.game_config["game_type"];
@@ -147,4 +159,29 @@ class GameRoom:
       cls.game = Game(cls.sessions, cls.game_finished);
     else:
       print("cannot create wrong game type", game_type);
+
+    if cls.game_config["frame_interval"] != 0:
+      cls.timer = threading.Timer(cls.game_config["frame_interval"], cls.push_update_message);
+
     cls.game_config_lock.release();
+
+  # 게임 업데이트 메시지를 큐에 넣는다.
+  def push_update_message(cls):
+    cls.game_lock.acquire();
+    if cls.game is not None:
+      cls.game_config_lock.acquire();
+      message = cls.game_config["update_message"];
+      WorkerManager().push_message(message);
+      cls.game_config_lock.release();
+      cls.timer = threading.Timer(cls.game_config["frame_interval"], cls.push_update_message);
+      cls.timer.start();
+    else:
+      print("cannot find game");
+    cls.game_lock.release();
+
+  # 게임 주기적 업데이트
+  def process_game_update(cls):
+    cls.game_lock.acquire();
+    if cls.game is not None:
+      cls.game.process_update();
+    cls.game_lock.release();

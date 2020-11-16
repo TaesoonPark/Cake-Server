@@ -74,5 +74,10 @@
   {
       "message_id": 16,
       "game_status": "start"
+  },
+  {
+      "message_id": 17,
+      "channel_id": 0,
+      "title": "title"
   }
 ]

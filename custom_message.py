@@ -19,6 +19,8 @@ MSG_START_GAME_ACK = 14;
 MSG_ROOM_STATUS = 15;
 MSG_GAME_STATUS = 16;
 
+INTERNAL_PROCESS_GAME_UPDATE = 17;
+
 message_template = [];
 
 # 메시지 기본형 생성

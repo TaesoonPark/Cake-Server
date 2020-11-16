@@ -60,7 +60,7 @@ class Channel:
     self.rooms_lock.acquire();
     result = (False, None);
     if title not in self.rooms:
-      new_room = GameRoom(title, nickname);
+      new_room = GameRoom(title, nickname, self.channel_id);
       self.rooms[title] = new_room;
       result = (True, new_room);
 
@@ -128,6 +128,12 @@ class Channel:
       self.rooms_lock.release();
     self.session_to_room_lock.release();
     return result;
+
+  # 게임 주기적 업데이트
+  def process_game_update(cls, game_title):
+    cls.rooms_lock.acquire();
+    if game_title in cls.rooms:
+      cls.rooms[game_title].process_update();
 
 
 active_channels = [];
@@ -253,3 +259,10 @@ def start_game(session_id):
       continue;
 
     return active_channel.start_game(session_id);
+
+
+def process_game_update(channel_id, game_title):
+  global active_channels;
+
+  if channel_id in active_channels:
+    active_channels[channel_id].process_game_update(game_title);

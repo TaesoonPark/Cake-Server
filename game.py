@@ -1,5 +1,6 @@
 from threading import Timer
 import time
+import datetime
 
 from worker_thread import IOWorkerManager
 from custom_message import *
@@ -30,3 +31,6 @@ class Game:
     msg["game_status"] = "end";
     cls.send_to_all(msg);
     return cls.finish_callback(cls.result_data);
+
+  def process_update(cls):
+    print("game process update", datetime.datetime.now());

@@ -1,6 +1,6 @@
 from worker_thread import IOWorkerManager, WorkerManager
 from custom_message import *
-from channel_handlers import add_user_to_channel, send_channel_chat, create_room, get_room_list, join_room, start_game
+from channel_handlers import *
 from session_manager import SessionManager
 
 def handle_login(message):
@@ -119,6 +119,14 @@ def handle_start_game(message):
   IOWorkerManager().push_io_message(session_id, res);
 
 
+def handle_game_update(message):
+  print("handle_game_update");
+
+  channel_id = message["channel_id"];
+  game_title = message["game_title"];
+  process_game_update(channel_id, game_title);
+
+
 # 메시지 핸들러 등록
 def init_handlers():
   WorkerManager().add_message_handler(MSG_LOGIN, handle_login);
@@ -128,3 +136,4 @@ def init_handlers():
   WorkerManager().add_message_handler(MSG_JOIN_ROOM, handle_join_room);
   WorkerManager().add_message_handler(MSG_LEAVE_ROOM, handle_leave_room);
   WorkerManager().add_message_handler(MSG_START_GAME, handle_start_game);
+  WorkerManager().add_message_handler(INTERNAL_PROCESS_GAME_UPDATE, handle_game_update);
