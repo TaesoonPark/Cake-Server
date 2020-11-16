@@ -10,6 +10,7 @@ class Game:
   def __init__(cls, sessions, finish_callback):
     cls.sessions = sessions;
     cls.finish_callback = finish_callback;
+    cls.index = 0;
 
   def send_to_all(cls, message):
     for session_id in cls.sessions:
@@ -33,4 +34,5 @@ class Game:
     return cls.finish_callback(cls.result_data);
 
   def process_update(cls):
-    print("game process update", datetime.datetime.now());
+    print("index=" , cls.index);
+    cls.index += 1;

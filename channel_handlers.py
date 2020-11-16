@@ -133,7 +133,8 @@ class Channel:
   def process_game_update(cls, game_title):
     cls.rooms_lock.acquire();
     if game_title in cls.rooms:
-      cls.rooms[game_title].process_update();
+      cls.rooms[game_title].process_game_update();
+    cls.rooms_lock.release();
 
 
 active_channels = [];
@@ -263,6 +264,7 @@ def start_game(session_id):
 
 def process_game_update(channel_id, game_title):
   global active_channels;
-
-  if channel_id in active_channels:
+  try:
     active_channels[channel_id].process_game_update(game_title);
+  except IndexError:
+    print("Cannot find channel", channel_id);
