@@ -141,7 +141,8 @@ class GameRoom:
       cls.make_game();
       if cls.game is not None:
         cls.game.start_game();
-        cls.timer.start();
+        if cls.timer is not None:
+          cls.timer.start();
       else:
         print("start_game() cannot find game object");
         result = False;
