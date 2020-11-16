@@ -45,7 +45,8 @@ class SessionManager():
     if session_id in cls.sessions:
       print("session closed", session_id);
       cls.sessions[session_id].close_socket();
-      del cls.sessions[session_id];
+      if session_id in cls.sessions:
+        del cls.sessions[session_id];
 
     cls.sessions_lock.release();
 

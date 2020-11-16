@@ -35,7 +35,8 @@ class Channel:
   # 채널에서 유저 세션을 제거
   def remove_user(self, session_id):
     self.sessions_lock.acquire();
-    del self.sessions[session_id];
+    if session_id in self.sessions:
+      del self.sessions[session_id];
     self.sessions_lock.release();
 
   # 현재 채널에 유저가 있는지 검사.
